@@ -76,7 +76,7 @@ class _PopupWidgetState extends State<PopupWidget> {
   bool _opened = false;
   PopupController _controller;
   Offset _offset;
-  CaretPosition _caretPosition = CaretPosition.NONE;
+  ArrowPosition _arrowPosition = ArrowPosition.NONE;
 
   double _top = 0;
   double _bottom = 0;
@@ -163,7 +163,7 @@ class _PopupWidgetState extends State<PopupWidget> {
                 )
                     : Positioned(
                   child: GestureDetector(
-                    child: widget.popupClipper == null || _caretPosition == CaretPosition.NONE
+                    child: widget.popupClipper == null || _arrowPosition == ArrowPosition.NONE
                         ? Container(
                       constraints: BoxConstraints(
                         maxHeight: _maxHeight,
@@ -176,13 +176,13 @@ class _PopupWidgetState extends State<PopupWidget> {
                         : Container(
                       decoration: widget.popupClipper.isWithShadow
                           ? BoxDecoration(
-                        boxShadow: [getBoxShadowClipped(widget.popupClipper.caretSize)],
+                        boxShadow: [getBoxShadowClipped(widget.popupClipper.arrowSize)],
                       )
                           : null,
                       child: PopupClipPath(
-                        caretSize: widget.popupClipper.caretSize, //widget.caretSize
-                        caretPosition: _caretPosition,
-                        caretOffset: widget.popupClipper.caretOffset,
+                        arrowSize: widget.popupClipper.arrowSize, //widget.arrowSize
+                        arrowPosition: _arrowPosition,
+                        arrowOffset: widget.popupClipper.arrowOffset,
                         borderRadius: widget.popupClipper.borderRadius,
                         strokeWidth: widget.popupClipper?.borderWidth ?? 0.0,
                         strokeColor: widget.popupClipper?.borderColor ?? Colors.black26,
@@ -193,9 +193,9 @@ class _PopupWidgetState extends State<PopupWidget> {
                           ),
                           child: SingleChildScrollView(
                             child: Material(
-                                color: widget.popupClipper.caretColor ?? Colors.grey,
+                                color: widget.popupClipper.arrowColor ?? Colors.grey,
                                 child: Padding(
-                                  padding: EdgeInsets.all(widget.popupClipper.caretSize),
+                                  padding: EdgeInsets.all(widget.popupClipper.arrowSize),
                                   child: widget.popupContent,
                                 )
                             ),
@@ -239,7 +239,7 @@ class _PopupWidgetState extends State<PopupWidget> {
     double right;
     double maxHeight;
     double maxWidth;
-    CaretPosition caretPosition;
+    ArrowPosition arrowPosition;
 
     var _position = widget.position;
     
@@ -272,7 +272,7 @@ class _PopupWidgetState extends State<PopupWidget> {
     }
 
     // Дополнительный отступ, устраняющий лишние пробелы, возникающие из-за клиппера
-    double indent = widget.popupClipper?.caretSize ?? 0;
+    double indent = widget.popupClipper?.arrowSize ?? 0;
 
     // Вычисляем положение всплывашки исходя из выбранной позиции
     //
@@ -288,7 +288,7 @@ class _PopupWidgetState extends State<PopupWidget> {
         right = null;
         maxHeight = activatorOffset.dy - appBarHeight * 2;
         maxWidth = _screenWidth - activatorOffset.dx;
-        caretPosition = CaretPosition.BOTTOM_LEFT;
+        arrowPosition = ArrowPosition.BOTTOM_LEFT;
         break;
     // Начиная от правого верхнего угла, распространяется вверх и налево
       case PopupPosition.ABOVE_from_topRight_corner:
@@ -299,7 +299,7 @@ class _PopupWidgetState extends State<PopupWidget> {
         right = _screenWidth - activatorOffset.dx - activatorSize.width + _offset.dx - indent;
         maxHeight = activatorOffset.dy - appBarHeight * 2;
         maxWidth = activatorOffset.dx + activatorSize.width;
-        caretPosition = CaretPosition.BOTTOM_RIGHT;
+        arrowPosition = ArrowPosition.BOTTOM_RIGHT;
         break;
     // Начиная от нижнего левого угла, распространяется вниз и направо
       case PopupPosition.UNDER_from_bottomLeft_corner:
@@ -309,7 +309,7 @@ class _PopupWidgetState extends State<PopupWidget> {
         right = null;
         maxHeight = _screenHeight - activatorOffset.dy - activatorSize.height - bottomBarHeight;
         maxWidth = _screenWidth - activatorOffset.dx;
-        caretPosition = CaretPosition.TOP_LEFT;
+        arrowPosition = ArrowPosition.TOP_LEFT;
         break;
     // Начиная от нижнего правого угла, распространяется вниз и налево
       case PopupPosition.UNDER_from_bottomRight_corner:
@@ -319,7 +319,7 @@ class _PopupWidgetState extends State<PopupWidget> {
         right = _screenWidth - activatorOffset.dx - activatorSize.width + _offset.dx - indent;
         maxHeight = _screenHeight - activatorOffset.dy - activatorSize.height - bottomBarHeight;
         maxWidth = activatorOffset.dx + activatorSize.width;
-        caretPosition = CaretPosition.TOP_RIGHT;
+        arrowPosition = ArrowPosition.TOP_RIGHT;
         break;
     // Начиная от верхнего левого угла, распространяется налево и вниз
       case PopupPosition.LEFT_from_topLeft_corner:
@@ -329,7 +329,7 @@ class _PopupWidgetState extends State<PopupWidget> {
         left = null;
         maxHeight = _screenHeight - activatorOffset.dy - bottomBarHeight;
         maxWidth = activatorOffset.dx;
-        caretPosition = CaretPosition.RIGHT_TOP;
+        arrowPosition = ArrowPosition.RIGHT_TOP;
         break;
     // Начиная от нижнего левого угла, распространяется налево и вверх
       case PopupPosition.LEFT_from_bottomLeft_corner:
@@ -338,7 +338,7 @@ class _PopupWidgetState extends State<PopupWidget> {
         right = _screenWidth - activatorOffset.dx + _offset.dx + indent;
         maxHeight = activatorOffset.dy + activatorSize.height - appBarHeight * 2;
         maxWidth = activatorOffset.dx;
-        caretPosition = CaretPosition.RIGHT_BOTTOM;
+        arrowPosition = ArrowPosition.RIGHT_BOTTOM;
         left = null;
         break;
     // Начиная от верхнего правого угла, распространяется направо и вниз
@@ -349,7 +349,7 @@ class _PopupWidgetState extends State<PopupWidget> {
         left = activatorOffset.dx + activatorSize.width + _offset.dx + indent;
         maxHeight = _screenHeight - activatorOffset.dy - bottomBarHeight;
         maxWidth = _screenWidth - activatorOffset.dx - activatorSize.width;
-        caretPosition = CaretPosition.LEFT_TOP;
+        arrowPosition = ArrowPosition.LEFT_TOP;
         break;
     // Начиная от нижнего правого угла, распространяется направо и вверх
       case PopupPosition.RIGHT_from_bottomRight_corner:
@@ -359,7 +359,7 @@ class _PopupWidgetState extends State<PopupWidget> {
         left = activatorOffset.dx + activatorSize.width + _offset.dx + indent;
         maxHeight = activatorOffset.dy + activatorSize.height - appBarHeight * 2;
         maxWidth = _screenWidth - activatorOffset.dx - activatorSize.width;
-        caretPosition = CaretPosition.LEFT_BOTTOM;
+        arrowPosition = ArrowPosition.LEFT_BOTTOM;
         break;
     // Начиная от левой стороны экрана и верхней стороны активатора, распространяется направо и вверх
       case PopupPosition.ABOVE_from_left_side_of_screen:
@@ -369,7 +369,7 @@ class _PopupWidgetState extends State<PopupWidget> {
         right = null;
         maxHeight = activatorOffset.dy - appBarHeight * 2;
         maxWidth = _screenWidth;
-        caretPosition = CaretPosition.NONE;
+        arrowPosition = ArrowPosition.NONE;
         break;
     // Начиная от правой стороны экрана и верхней стороны активатора, распространяется налево и вверх
       case PopupPosition.ABOVE_from_right_side_of_screen:
@@ -379,7 +379,7 @@ class _PopupWidgetState extends State<PopupWidget> {
         right = _offset.dx;
         maxHeight = activatorOffset.dy - appBarHeight * 2;
         maxWidth = _screenWidth;
-        caretPosition = CaretPosition.NONE;
+        arrowPosition = ArrowPosition.NONE;
         break;
     // Начиная от левой стороны экрана и нижней стороны активатора, распространяется направо и вниз
       case PopupPosition.UNDER_from_left_side_of_screen:
@@ -389,7 +389,7 @@ class _PopupWidgetState extends State<PopupWidget> {
         right = null;
         maxHeight = _screenHeight - activatorOffset.dy - activatorSize.height - bottomBarHeight;
         maxWidth = _screenWidth;
-        caretPosition = CaretPosition.NONE;
+        arrowPosition = ArrowPosition.NONE;
         break;
     // Начиная от правой стороны экрана и нижней стороны активатора, распространяется налево и вниз
       case PopupPosition.UNDER_from_right_side_of_screen:
@@ -399,7 +399,7 @@ class _PopupWidgetState extends State<PopupWidget> {
         right = _offset.dx;
         maxHeight = _screenHeight - activatorOffset.dy - activatorSize.height - bottomBarHeight;
         maxWidth = _screenWidth;
-        caretPosition = CaretPosition.NONE;
+        arrowPosition = ArrowPosition.NONE;
         break;
     // Начиная от центра экрана, распространяется равномерно во все стороны
       case PopupPosition.CENTER_OF_SCREEN:
@@ -410,7 +410,7 @@ class _PopupWidgetState extends State<PopupWidget> {
         left = 0;
         maxHeight = _screenHeight - appBarHeight * 2 - bottomBarHeight;
         maxWidth = _screenWidth;
-        caretPosition = CaretPosition.NONE;
+        arrowPosition = ArrowPosition.NONE;
         break;
     }
 
@@ -421,7 +421,7 @@ class _PopupWidgetState extends State<PopupWidget> {
       _right = right;
       _maxHeight = maxHeight * widget.expansionFactor;
       _maxWidth = maxWidth * widget.expansionFactor;
-      _caretPosition = caretPosition;
+      _arrowPosition = arrowPosition;
     });
   }
 }

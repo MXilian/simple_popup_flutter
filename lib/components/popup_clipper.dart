@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 /// Если контент попапа должен иметь стрелочку, то объект класса
 /// [PopupClipper] должен быть передан в конструктор попапа
 class PopupClipper {
-  final Color caretColor;
+  final Color arrowColor;
   final bool isWithShadow;
-  final double caretSize;
-  final double caretOffset;
+  final double arrowSize;
+  final double arrowOffset;
   final double borderRadius;
   final double borderWidth;
   final Color borderColor;
 
   PopupClipper({
-    this.caretColor,
+    this.arrowColor,
     this.isWithShadow = false,
-    this.caretSize = 7.0,
-    this.caretOffset = 9.0,
+    this.arrowSize = 7.0,
+    this.arrowOffset = 9.0,
     this.borderRadius = 6.0,
     this.borderWidth = 0.0,
     this.borderColor,
@@ -23,7 +23,7 @@ class PopupClipper {
 }
 
 /// Положение стрелочки между всплывашкой и кнопкой
-enum CaretPosition {
+enum ArrowPosition {
   NONE,
   TOP_LEFT,
   TOP_RIGHT,
@@ -37,9 +37,9 @@ enum CaretPosition {
 
 /// Класс, возвращающий обрезанный child с границами
 class PopupClipPath extends StatelessWidget {
-  final double caretOffset;
-  final double caretSize;
-  final CaretPosition caretPosition;
+  final double arrowOffset;
+  final double arrowSize;
+  final ArrowPosition arrowPosition;
   final double borderRadius;
   final double strokeWidth;
   final Color strokeColor;
@@ -47,18 +47,18 @@ class PopupClipPath extends StatelessWidget {
 
   PopupClipPath({
     @required this.child,
-    this.caretOffset = 0,
-    this.caretSize = 0,
-    this.caretPosition = CaretPosition.NONE,
+    this.arrowOffset = 0,
+    this.arrowSize = 0,
+    this.arrowPosition = ArrowPosition.NONE,
     this.borderRadius,
     this.strokeWidth = 0,
     this.strokeColor,
   });
 
   _PopupContentClipper get clipper => _PopupContentClipper(
-    caretSize: caretSize,
-    caretPosition: caretPosition,
-    caretOffset: caretOffset,
+    arrowSize: arrowSize,
+    arrowPosition: arrowPosition,
+    arrowOffset: arrowOffset,
     borderRadius: borderRadius,
   );
 
@@ -82,55 +82,55 @@ class PopupClipPath extends StatelessWidget {
 
 /// Обрезаем контейнер, чтобы придать ему форму со стрелочкой
 class _PopupContentClipper extends CustomClipper<Path> {
-  final double caretOffset;
-  final double caretSize;
-  final CaretPosition caretPosition;
+  final double arrowOffset;
+  final double arrowSize;
+  final ArrowPosition arrowPosition;
   final double borderRadius;
 
   _PopupContentClipper({
-    this.caretOffset,
-    this.caretSize,
-    this.caretPosition,
+    this.arrowOffset,
+    this.arrowSize,
+    this.arrowPosition,
     this.borderRadius,
   });
 
-  Path _getTopLeftCaret(Size size) {
+  Path _getTopLeftArrow(Size size) {
     Path path = Path();
 
     // Начало фигуры (сразу после закругления левого верхнего угла)
-    // caretSize - это не только размер стрелки, но и число, на которое обрезается контент
-    path.moveTo(caretSize + borderRadius, caretSize);
+    // arrowSize - это не только размер стрелки, но и число, на которое обрезается контент
+    path.moveTo(arrowSize + borderRadius, arrowSize);
 
     // Стрелка между всплывашкой и активатором
-    path.lineTo(caretSize + borderRadius + caretOffset, caretSize);
-    if (caretSize > 0) {
-      path.lineTo(caretSize + borderRadius + caretOffset + caretSize, 0.0);
-      path.lineTo(caretSize + borderRadius + caretOffset + caretSize * 2, caretSize);
+    path.lineTo(arrowSize + borderRadius + arrowOffset, arrowSize);
+    if (arrowSize > 0) {
+      path.lineTo(arrowSize + borderRadius + arrowOffset + arrowSize, 0.0);
+      path.lineTo(arrowSize + borderRadius + arrowOffset + arrowSize * 2, arrowSize);
     }
 
     // Линия до точки перед закруглением правого верхнего угла
-    path.lineTo(size.width - caretSize - borderRadius, caretSize);
+    path.lineTo(size.width - arrowSize - borderRadius, arrowSize);
     // Закругление правого верхнего угла
-    path.arcToPoint(Offset(size.width - caretSize, borderRadius + caretSize),
+    path.arcToPoint(Offset(size.width - arrowSize, borderRadius + arrowSize),
         radius: Radius.circular(borderRadius)); // закругление
 
     // Линия до точки перед закруглением правого нижнего угла
-    path.lineTo(size.width - caretSize, size.height - caretSize - borderRadius);
+    path.lineTo(size.width - arrowSize, size.height - arrowSize - borderRadius);
     // Закругление правого нижнего угла
     path.arcToPoint(
-        Offset(size.width - caretSize - borderRadius, size.height - caretSize),
+        Offset(size.width - arrowSize - borderRadius, size.height - arrowSize),
         radius: Radius.circular(borderRadius));
 
     // Линия до точки перед закруглением левого нижнего угла
-    path.lineTo(caretSize + borderRadius, size.height - caretSize);
+    path.lineTo(arrowSize + borderRadius, size.height - arrowSize);
     // Закругление левого нижнего угла
-    path.arcToPoint(Offset(caretSize, size.height - caretSize - borderRadius),
+    path.arcToPoint(Offset(arrowSize, size.height - arrowSize - borderRadius),
         radius: Radius.circular(borderRadius));
 
     // Линия до точки перед закруглением левого верхнего угла
-    path.lineTo(caretSize, caretSize + borderRadius);
+    path.lineTo(arrowSize, arrowSize + borderRadius);
     // Закругление левого верхнего угла
-    path.arcToPoint(Offset(caretSize + borderRadius, caretSize),
+    path.arcToPoint(Offset(arrowSize + borderRadius, arrowSize),
         radius: Radius.circular(borderRadius));
 
     // Замыкаем контур
@@ -140,44 +140,44 @@ class _PopupContentClipper extends CustomClipper<Path> {
   }
 
 
-  Path _getTopRightCaret(Size size) {
+  Path _getTopRightArrow(Size size) {
     Path path = Path();
 
     // Начало фигуры (сразу после закругления левого верхнего угла)
-    // caretSize - это не только размер стрелки, но и число, на которое обрезается контент
-    path.moveTo(caretSize + borderRadius, caretSize);
+    // arrowSize - это не только размер стрелки, но и число, на которое обрезается контент
+    path.moveTo(arrowSize + borderRadius, arrowSize);
 
     // Линия до стрелки
-    path.lineTo(size.width - caretSize * 3 - borderRadius - caretOffset, caretSize);
+    path.lineTo(size.width - arrowSize * 3 - borderRadius - arrowOffset, arrowSize);
 
     // Стрелка между всплывашкой и активатором
-    if (caretSize > 0) {
-      path.lineTo(size.width - caretSize * 2 - borderRadius - caretOffset, 0.0);
-      path.lineTo(size.width - caretSize - borderRadius - caretOffset, caretSize);
+    if (arrowSize > 0) {
+      path.lineTo(size.width - arrowSize * 2 - borderRadius - arrowOffset, 0.0);
+      path.lineTo(size.width - arrowSize - borderRadius - arrowOffset, arrowSize);
     }
-    path.lineTo(size.width - caretSize - borderRadius, caretSize);
+    path.lineTo(size.width - arrowSize - borderRadius, arrowSize);
 
     // Закругление правого верхнего угла
-    path.arcToPoint(Offset(size.width - caretSize, borderRadius + caretSize),
+    path.arcToPoint(Offset(size.width - arrowSize, borderRadius + arrowSize),
         radius: Radius.circular(borderRadius)); // закругление
 
     // Линия до точки перед закруглением правого нижнего угла
-    path.lineTo(size.width - caretSize, size.height - caretSize - borderRadius);
+    path.lineTo(size.width - arrowSize, size.height - arrowSize - borderRadius);
     // Закругление правого нижнего угла
     path.arcToPoint(
-        Offset(size.width - caretSize - borderRadius, size.height - caretSize),
+        Offset(size.width - arrowSize - borderRadius, size.height - arrowSize),
         radius: Radius.circular(borderRadius));
 
     // Линия до точки перед закруглением левого нижнего угла
-    path.lineTo(caretSize + borderRadius, size.height - caretSize);
+    path.lineTo(arrowSize + borderRadius, size.height - arrowSize);
     // Закругление левого нижнего угла
-    path.arcToPoint(Offset(caretSize, size.height - caretSize - borderRadius),
+    path.arcToPoint(Offset(arrowSize, size.height - arrowSize - borderRadius),
         radius: Radius.circular(borderRadius));
 
     // Линия до точки перед закруглением левого верхнего угла
-    path.lineTo(caretSize, caretSize + borderRadius);
+    path.lineTo(arrowSize, arrowSize + borderRadius);
     // Закругление левого верхнего угла
-    path.arcToPoint(Offset(caretSize + borderRadius, caretSize),
+    path.arcToPoint(Offset(arrowSize + borderRadius, arrowSize),
         radius: Radius.circular(borderRadius));
 
     // Замыкаем контур
@@ -186,95 +186,46 @@ class _PopupContentClipper extends CustomClipper<Path> {
     return path;
   }
 
-  Path _getBottomLeftCaret(Size size) {
+  Path _getBottomLeftArrow(Size size) {
     Path path = Path();
 
     // Начало фигуры (сразу после закругления левого верхнего угла)
-    // caretSize - это не только размер стрелки, но и число, на которое обрезается контент
-    path.moveTo(caretSize + borderRadius, caretSize);
+    // arrowSize - это не только размер стрелки, но и число, на которое обрезается контент
+    path.moveTo(arrowSize + borderRadius, arrowSize);
 
     // Линия до начала закругления правого верхнего угла
-    path.lineTo(size.width - caretSize - borderRadius, caretSize);
+    path.lineTo(size.width - arrowSize - borderRadius, arrowSize);
 
     // Закругление правого верхнего угла
-    path.arcToPoint(Offset(size.width - caretSize, borderRadius + caretSize),
+    path.arcToPoint(Offset(size.width - arrowSize, borderRadius + arrowSize),
         radius: Radius.circular(borderRadius)); // закругление
 
     // Линия до точки перед закруглением правого нижнего угла
-    path.lineTo(size.width - caretSize, size.height - caretSize - borderRadius);
+    path.lineTo(size.width - arrowSize, size.height - arrowSize - borderRadius);
     // Закругление правого нижнего угла
     path.arcToPoint(
-        Offset(size.width - caretSize - borderRadius, size.height - caretSize),
+        Offset(size.width - arrowSize - borderRadius, size.height - arrowSize),
         radius: Radius.circular(borderRadius));
 
     // Линия до начала стрелки
-    path.lineTo(caretSize + borderRadius + caretOffset + caretSize * 2, size.height - caretSize);
+    path.lineTo(arrowSize + borderRadius + arrowOffset + arrowSize * 2, size.height - arrowSize);
 
     // Стрелка между всплывашкой и активатором
-    if (caretSize > 0) {
-      path.lineTo(caretSize + borderRadius + caretOffset + caretSize, size.height);
-      path.lineTo(caretSize + borderRadius + caretOffset, size.height - caretSize);
+    if (arrowSize > 0) {
+      path.lineTo(arrowSize + borderRadius + arrowOffset + arrowSize, size.height);
+      path.lineTo(arrowSize + borderRadius + arrowOffset, size.height - arrowSize);
     }
 
     // Линия до точки перед закруглением левого нижнего угла
-    path.lineTo(caretSize + borderRadius, size.height - caretSize);
+    path.lineTo(arrowSize + borderRadius, size.height - arrowSize);
     // Закругление левого нижнего угла
-    path.arcToPoint(Offset(caretSize, size.height - caretSize - borderRadius),
+    path.arcToPoint(Offset(arrowSize, size.height - arrowSize - borderRadius),
         radius: Radius.circular(borderRadius));
 
     // Линия до точки перед закруглением левого верхнего угла
-    path.lineTo(caretSize, caretSize + borderRadius);
+    path.lineTo(arrowSize, arrowSize + borderRadius);
     // Закругление левого верхнего угла
-    path.arcToPoint(Offset(caretSize + borderRadius, caretSize),
-        radius: Radius.circular(borderRadius));
-
-    // Замыкаем контур
-    path.close();
-
-    return path;
-  }
-
-
-  Path _getBottomRightCaret(Size size) {
-    Path path = Path();
-
-    // Начало фигуры (сразу после закругления левого верхнего угла)
-    // caretSize - это не только размер стрелки, но и число, на которое обрезается контент
-    path.moveTo(caretSize + borderRadius, caretSize);
-
-    // Линия до начала закругления правого верхнего угла
-    path.lineTo(size.width - caretSize - borderRadius, caretSize);
-
-    // Закругление правого верхнего угла
-    path.arcToPoint(Offset(size.width - caretSize, borderRadius + caretSize),
-        radius: Radius.circular(borderRadius)); // закругление
-
-    // Линия до точки перед закруглением правого нижнего угла
-    path.lineTo(size.width - caretSize, size.height - caretSize - borderRadius);
-    // Закругление правого нижнего угла
-    path.arcToPoint(
-        Offset(size.width - caretSize - borderRadius, size.height - caretSize),
-        radius: Radius.circular(borderRadius));
-
-    // Линия до начала стрелки
-    path.lineTo(size.width - caretSize - borderRadius - caretOffset, size.height - caretSize);
-
-    // Стрелка между всплывашкой и активатором
-    if (caretSize > 0) {
-      path.lineTo(size.width - caretSize * 2 - borderRadius - caretOffset, size.height);
-      path.lineTo(size.width - caretSize * 3 - borderRadius - caretOffset, size.height - caretSize);
-    }
-
-    // Линия до точки перед закруглением левого нижнего угла
-    path.lineTo(caretSize + borderRadius, size.height - caretSize);
-    // Закругление левого нижнего угла
-    path.arcToPoint(Offset(caretSize, size.height - caretSize - borderRadius),
-        radius: Radius.circular(borderRadius));
-
-    // Линия до точки перед закруглением левого верхнего угла
-    path.lineTo(caretSize, caretSize + borderRadius);
-    // Закругление левого верхнего угла
-    path.arcToPoint(Offset(caretSize + borderRadius, caretSize),
+    path.arcToPoint(Offset(arrowSize + borderRadius, arrowSize),
         radius: Radius.circular(borderRadius));
 
     // Замыкаем контур
@@ -284,46 +235,46 @@ class _PopupContentClipper extends CustomClipper<Path> {
   }
 
 
-  Path _getLeftTopCaret(Size size) {
+  Path _getBottomRightArrow(Size size) {
     Path path = Path();
 
     // Начало фигуры (сразу после закругления левого верхнего угла)
-    // caretSize - это не только размер стрелки, но и число, на которое обрезается контент
-    path.moveTo(caretSize + borderRadius, caretSize);
+    // arrowSize - это не только размер стрелки, но и число, на которое обрезается контент
+    path.moveTo(arrowSize + borderRadius, arrowSize);
 
     // Линия до начала закругления правого верхнего угла
-    path.lineTo(size.width - caretSize - borderRadius, caretSize);
+    path.lineTo(size.width - arrowSize - borderRadius, arrowSize);
 
     // Закругление правого верхнего угла
-    path.arcToPoint(Offset(size.width - caretSize, borderRadius + caretSize),
+    path.arcToPoint(Offset(size.width - arrowSize, borderRadius + arrowSize),
         radius: Radius.circular(borderRadius)); // закругление
 
     // Линия до точки перед закруглением правого нижнего угла
-    path.lineTo(size.width - caretSize, size.height - caretSize - borderRadius);
+    path.lineTo(size.width - arrowSize, size.height - arrowSize - borderRadius);
     // Закругление правого нижнего угла
     path.arcToPoint(
-        Offset(size.width - caretSize - borderRadius, size.height - caretSize),
-        radius: Radius.circular(borderRadius));
-
-    // Линия до точки перед закруглением левого нижнего угла
-    path.lineTo(caretSize + borderRadius, size.height - caretSize);
-    // Закругление левого нижнего угла
-    path.arcToPoint(Offset(caretSize, size.height - caretSize - borderRadius),
+        Offset(size.width - arrowSize - borderRadius, size.height - arrowSize),
         radius: Radius.circular(borderRadius));
 
     // Линия до начала стрелки
-    path.lineTo(caretSize, caretSize * 3 + borderRadius + caretOffset);
+    path.lineTo(size.width - arrowSize - borderRadius - arrowOffset, size.height - arrowSize);
 
     // Стрелка между всплывашкой и активатором
-    if (caretSize > 0) {
-      path.lineTo(0.0, caretSize * 2 + borderRadius + caretOffset);
-      path.lineTo(caretSize, caretSize + borderRadius + caretOffset);
+    if (arrowSize > 0) {
+      path.lineTo(size.width - arrowSize * 2 - borderRadius - arrowOffset, size.height);
+      path.lineTo(size.width - arrowSize * 3 - borderRadius - arrowOffset, size.height - arrowSize);
     }
 
+    // Линия до точки перед закруглением левого нижнего угла
+    path.lineTo(arrowSize + borderRadius, size.height - arrowSize);
+    // Закругление левого нижнего угла
+    path.arcToPoint(Offset(arrowSize, size.height - arrowSize - borderRadius),
+        radius: Radius.circular(borderRadius));
+
     // Линия до точки перед закруглением левого верхнего угла
-    path.lineTo(caretSize, caretSize + borderRadius);
+    path.lineTo(arrowSize, arrowSize + borderRadius);
     // Закругление левого верхнего угла
-    path.arcToPoint(Offset(caretSize + borderRadius, caretSize),
+    path.arcToPoint(Offset(arrowSize + borderRadius, arrowSize),
         radius: Radius.circular(borderRadius));
 
     // Замыкаем контур
@@ -333,46 +284,46 @@ class _PopupContentClipper extends CustomClipper<Path> {
   }
 
 
-  Path _getLeftBottomCaret(Size size) {
+  Path _getLeftTopArrow(Size size) {
     Path path = Path();
 
     // Начало фигуры (сразу после закругления левого верхнего угла)
-    // caretSize - это не только размер стрелки, но и число, на которое обрезается контент
-    path.moveTo(caretSize + borderRadius, caretSize);
+    // arrowSize - это не только размер стрелки, но и число, на которое обрезается контент
+    path.moveTo(arrowSize + borderRadius, arrowSize);
 
     // Линия до начала закругления правого верхнего угла
-    path.lineTo(size.width - caretSize - borderRadius, caretSize);
+    path.lineTo(size.width - arrowSize - borderRadius, arrowSize);
 
     // Закругление правого верхнего угла
-    path.arcToPoint(Offset(size.width - caretSize, borderRadius + caretSize),
+    path.arcToPoint(Offset(size.width - arrowSize, borderRadius + arrowSize),
         radius: Radius.circular(borderRadius)); // закругление
 
     // Линия до точки перед закруглением правого нижнего угла
-    path.lineTo(size.width - caretSize, size.height - caretSize - borderRadius);
+    path.lineTo(size.width - arrowSize, size.height - arrowSize - borderRadius);
     // Закругление правого нижнего угла
     path.arcToPoint(
-        Offset(size.width - caretSize - borderRadius, size.height - caretSize),
+        Offset(size.width - arrowSize - borderRadius, size.height - arrowSize),
         radius: Radius.circular(borderRadius));
 
     // Линия до точки перед закруглением левого нижнего угла
-    path.lineTo(caretSize + borderRadius, size.height - caretSize);
+    path.lineTo(arrowSize + borderRadius, size.height - arrowSize);
     // Закругление левого нижнего угла
-    path.arcToPoint(Offset(caretSize, size.height - caretSize - borderRadius),
+    path.arcToPoint(Offset(arrowSize, size.height - arrowSize - borderRadius),
         radius: Radius.circular(borderRadius));
 
     // Линия до начала стрелки
-    path.lineTo(caretSize, size.height - caretSize - borderRadius - caretOffset);
+    path.lineTo(arrowSize, arrowSize * 3 + borderRadius + arrowOffset);
 
     // Стрелка между всплывашкой и активатором
-    if (caretSize > 0) {
-      path.lineTo(0.0, size.height - caretSize * 2 - borderRadius - caretOffset);
-      path.lineTo(caretSize, size.height - caretSize * 3 - borderRadius - caretOffset);
+    if (arrowSize > 0) {
+      path.lineTo(0.0, arrowSize * 2 + borderRadius + arrowOffset);
+      path.lineTo(arrowSize, arrowSize + borderRadius + arrowOffset);
     }
 
     // Линия до точки перед закруглением левого верхнего угла
-    path.lineTo(caretSize, caretSize + borderRadius);
+    path.lineTo(arrowSize, arrowSize + borderRadius);
     // Закругление левого верхнего угла
-    path.arcToPoint(Offset(caretSize + borderRadius, caretSize),
+    path.arcToPoint(Offset(arrowSize + borderRadius, arrowSize),
         radius: Radius.circular(borderRadius));
 
     // Замыкаем контур
@@ -382,46 +333,46 @@ class _PopupContentClipper extends CustomClipper<Path> {
   }
 
 
-  Path _getRightTopCaret(Size size) {
+  Path _getLeftBottomArrow(Size size) {
     Path path = Path();
 
     // Начало фигуры (сразу после закругления левого верхнего угла)
-    // caretSize - это не только размер стрелки, но и число, на которое обрезается контент
-    path.moveTo(caretSize + borderRadius, caretSize);
+    // arrowSize - это не только размер стрелки, но и число, на которое обрезается контент
+    path.moveTo(arrowSize + borderRadius, arrowSize);
 
     // Линия до начала закругления правого верхнего угла
-    path.lineTo(size.width - caretSize - borderRadius, caretSize);
+    path.lineTo(size.width - arrowSize - borderRadius, arrowSize);
 
     // Закругление правого верхнего угла
-    path.arcToPoint(Offset(size.width - caretSize, borderRadius + caretSize),
+    path.arcToPoint(Offset(size.width - arrowSize, borderRadius + arrowSize),
         radius: Radius.circular(borderRadius)); // закругление
 
-    // Линия до начала стрелки
-    path.lineTo(size.width - caretSize, caretSize + borderRadius + caretOffset);
-
-    // Стрелка между всплывашкой и активатором
-    if (caretSize > 0) {
-      path.lineTo(size.width, caretSize * 2 + borderRadius + caretOffset);
-      path.lineTo(size.width - caretSize, caretSize * 3 + borderRadius + caretOffset);
-    }
-
     // Линия до точки перед закруглением правого нижнего угла
-    path.lineTo(size.width - caretSize, size.height - caretSize - borderRadius);
+    path.lineTo(size.width - arrowSize, size.height - arrowSize - borderRadius);
     // Закругление правого нижнего угла
     path.arcToPoint(
-        Offset(size.width - caretSize - borderRadius, size.height - caretSize),
+        Offset(size.width - arrowSize - borderRadius, size.height - arrowSize),
         radius: Radius.circular(borderRadius));
 
     // Линия до точки перед закруглением левого нижнего угла
-    path.lineTo(caretSize + borderRadius, size.height - caretSize);
+    path.lineTo(arrowSize + borderRadius, size.height - arrowSize);
     // Закругление левого нижнего угла
-    path.arcToPoint(Offset(caretSize, size.height - caretSize - borderRadius),
+    path.arcToPoint(Offset(arrowSize, size.height - arrowSize - borderRadius),
         radius: Radius.circular(borderRadius));
 
+    // Линия до начала стрелки
+    path.lineTo(arrowSize, size.height - arrowSize - borderRadius - arrowOffset);
+
+    // Стрелка между всплывашкой и активатором
+    if (arrowSize > 0) {
+      path.lineTo(0.0, size.height - arrowSize * 2 - borderRadius - arrowOffset);
+      path.lineTo(arrowSize, size.height - arrowSize * 3 - borderRadius - arrowOffset);
+    }
+
     // Линия до точки перед закруглением левого верхнего угла
-    path.lineTo(caretSize, caretSize + borderRadius);
+    path.lineTo(arrowSize, arrowSize + borderRadius);
     // Закругление левого верхнего угла
-    path.arcToPoint(Offset(caretSize + borderRadius, caretSize),
+    path.arcToPoint(Offset(arrowSize + borderRadius, arrowSize),
         radius: Radius.circular(borderRadius));
 
     // Замыкаем контур
@@ -431,46 +382,95 @@ class _PopupContentClipper extends CustomClipper<Path> {
   }
 
 
-  Path _getRightBottomCaret(Size size) {
+  Path _getRightTopArrow(Size size) {
     Path path = Path();
 
     // Начало фигуры (сразу после закругления левого верхнего угла)
-    // caretSize - это не только размер стрелки, но и число, на которое обрезается контент
-    path.moveTo(caretSize + borderRadius, caretSize);
+    // arrowSize - это не только размер стрелки, но и число, на которое обрезается контент
+    path.moveTo(arrowSize + borderRadius, arrowSize);
 
     // Линия до начала закругления правого верхнего угла
-    path.lineTo(size.width - caretSize - borderRadius, caretSize);
+    path.lineTo(size.width - arrowSize - borderRadius, arrowSize);
 
     // Закругление правого верхнего угла
-    path.arcToPoint(Offset(size.width - caretSize, borderRadius + caretSize),
+    path.arcToPoint(Offset(size.width - arrowSize, borderRadius + arrowSize),
         radius: Radius.circular(borderRadius)); // закругление
 
     // Линия до начала стрелки
-    path.lineTo(size.width - caretSize, size.height - caretSize * 3 - borderRadius - caretOffset);
+    path.lineTo(size.width - arrowSize, arrowSize + borderRadius + arrowOffset);
 
     // Стрелка между всплывашкой и активатором
-    if (caretSize > 0) {
-      path.lineTo(size.width, size.height - caretSize * 2 - borderRadius - caretOffset);
-      path.lineTo(size.width - caretSize, size.height - caretSize - borderRadius - caretOffset);
+    if (arrowSize > 0) {
+      path.lineTo(size.width, arrowSize * 2 + borderRadius + arrowOffset);
+      path.lineTo(size.width - arrowSize, arrowSize * 3 + borderRadius + arrowOffset);
     }
 
     // Линия до точки перед закруглением правого нижнего угла
-    path.lineTo(size.width - caretSize, size.height - caretSize - borderRadius);
+    path.lineTo(size.width - arrowSize, size.height - arrowSize - borderRadius);
     // Закругление правого нижнего угла
     path.arcToPoint(
-        Offset(size.width - caretSize - borderRadius, size.height - caretSize),
+        Offset(size.width - arrowSize - borderRadius, size.height - arrowSize),
         radius: Radius.circular(borderRadius));
 
     // Линия до точки перед закруглением левого нижнего угла
-    path.lineTo(caretSize + borderRadius, size.height - caretSize);
+    path.lineTo(arrowSize + borderRadius, size.height - arrowSize);
     // Закругление левого нижнего угла
-    path.arcToPoint(Offset(caretSize, size.height - caretSize - borderRadius),
+    path.arcToPoint(Offset(arrowSize, size.height - arrowSize - borderRadius),
         radius: Radius.circular(borderRadius));
 
     // Линия до точки перед закруглением левого верхнего угла
-    path.lineTo(caretSize, caretSize + borderRadius);
+    path.lineTo(arrowSize, arrowSize + borderRadius);
     // Закругление левого верхнего угла
-    path.arcToPoint(Offset(caretSize + borderRadius, caretSize),
+    path.arcToPoint(Offset(arrowSize + borderRadius, arrowSize),
+        radius: Radius.circular(borderRadius));
+
+    // Замыкаем контур
+    path.close();
+
+    return path;
+  }
+
+
+  Path _getRightBottomArrow(Size size) {
+    Path path = Path();
+
+    // Начало фигуры (сразу после закругления левого верхнего угла)
+    // arrowSize - это не только размер стрелки, но и число, на которое обрезается контент
+    path.moveTo(arrowSize + borderRadius, arrowSize);
+
+    // Линия до начала закругления правого верхнего угла
+    path.lineTo(size.width - arrowSize - borderRadius, arrowSize);
+
+    // Закругление правого верхнего угла
+    path.arcToPoint(Offset(size.width - arrowSize, borderRadius + arrowSize),
+        radius: Radius.circular(borderRadius)); // закругление
+
+    // Линия до начала стрелки
+    path.lineTo(size.width - arrowSize, size.height - arrowSize * 3 - borderRadius - arrowOffset);
+
+    // Стрелка между всплывашкой и активатором
+    if (arrowSize > 0) {
+      path.lineTo(size.width, size.height - arrowSize * 2 - borderRadius - arrowOffset);
+      path.lineTo(size.width - arrowSize, size.height - arrowSize - borderRadius - arrowOffset);
+    }
+
+    // Линия до точки перед закруглением правого нижнего угла
+    path.lineTo(size.width - arrowSize, size.height - arrowSize - borderRadius);
+    // Закругление правого нижнего угла
+    path.arcToPoint(
+        Offset(size.width - arrowSize - borderRadius, size.height - arrowSize),
+        radius: Radius.circular(borderRadius));
+
+    // Линия до точки перед закруглением левого нижнего угла
+    path.lineTo(arrowSize + borderRadius, size.height - arrowSize);
+    // Закругление левого нижнего угла
+    path.arcToPoint(Offset(arrowSize, size.height - arrowSize - borderRadius),
+        radius: Radius.circular(borderRadius));
+
+    // Линия до точки перед закруглением левого верхнего угла
+    path.lineTo(arrowSize, arrowSize + borderRadius);
+    // Закругление левого верхнего угла
+    path.arcToPoint(Offset(arrowSize + borderRadius, arrowSize),
         radius: Radius.circular(borderRadius));
 
     // Замыкаем контур
@@ -482,22 +482,22 @@ class _PopupContentClipper extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    if (caretPosition == CaretPosition.TOP_LEFT)
-      return _getTopLeftCaret(size);
-    else if (caretPosition == CaretPosition.TOP_RIGHT)
-      return _getTopRightCaret(size);
-    else if (caretPosition == CaretPosition.BOTTOM_LEFT)
-      return _getBottomLeftCaret(size);
-    else if (caretPosition == CaretPosition.BOTTOM_RIGHT)
-      return _getBottomRightCaret(size);
-    else if (caretPosition == CaretPosition.LEFT_TOP)
-      return _getLeftTopCaret(size);
-    else if (caretPosition == CaretPosition.LEFT_BOTTOM)
-      return _getLeftBottomCaret(size);
-    else if (caretPosition == CaretPosition.RIGHT_TOP)
-      return _getRightTopCaret(size);
-    else if (caretPosition == CaretPosition.RIGHT_BOTTOM)
-      return _getRightBottomCaret(size);
+    if (arrowPosition == ArrowPosition.TOP_LEFT)
+      return _getTopLeftArrow(size);
+    else if (arrowPosition == ArrowPosition.TOP_RIGHT)
+      return _getTopRightArrow(size);
+    else if (arrowPosition == ArrowPosition.BOTTOM_LEFT)
+      return _getBottomLeftArrow(size);
+    else if (arrowPosition == ArrowPosition.BOTTOM_RIGHT)
+      return _getBottomRightArrow(size);
+    else if (arrowPosition == ArrowPosition.LEFT_TOP)
+      return _getLeftTopArrow(size);
+    else if (arrowPosition == ArrowPosition.LEFT_BOTTOM)
+      return _getLeftBottomArrow(size);
+    else if (arrowPosition == ArrowPosition.RIGHT_TOP)
+      return _getRightTopArrow(size);
+    else if (arrowPosition == ArrowPosition.RIGHT_BOTTOM)
+      return _getRightBottomArrow(size);
     else
       return Path();
   }
@@ -541,9 +541,9 @@ class _PopupBorderPainter extends CustomPainter {
 
 
 /// Тень для попапа с переданным параметром [PopupClipper]
-BoxShadow getBoxShadowClipped(double caretSize) => BoxShadow(
+BoxShadow getBoxShadowClipped(double arrowSize) => BoxShadow(
   color: Colors.black26,
-  spreadRadius: - caretSize * 1.3, // Уменьшаем площадь тени, т.к. фигура обрезана
+  spreadRadius: - arrowSize * 1.3, // Уменьшаем площадь тени, т.к. фигура обрезана
   blurRadius: 4.0,
   offset: Offset(
     4.0, // смещение вправо
