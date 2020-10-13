@@ -3,16 +3,17 @@ import 'package:simple_popup_flutter/components/popup_clipper.dart';
 import 'package:simple_popup_flutter/components/popup_position.dart';
 import 'package:simple_popup_flutter/popup_widget.dart';
 
+// sorry for my english :)
+
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'PopupWidget Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
