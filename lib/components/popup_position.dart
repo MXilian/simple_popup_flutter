@@ -1,0 +1,16 @@
+enum PopupPosition {
+  AUTO,
+  ABOVE_from_topLeft_corner,
+  ABOVE_from_topRight_corner,
+  UNDER_from_bottomLeft_corner,
+  UNDER_from_bottomRight_corner,
+  LEFT_from_topLeft_corner,
+  LEFT_from_bottomLeft_corner,
+  RIGHT_from_topRight_corner,
+  RIGHT_from_bottomRight_corner,
+  CENTER_OF_SCREEN,
+  ABOVE_from_left_side_of_screen,
+  ABOVE_from_right_side_of_screen,
+  UNDER_from_left_side_of_screen,
+  UNDER_from_right_side_of_screen,
+}
