@@ -10,3 +10,6 @@ ____
 
 Можно кастомизировать: задать конкретное позиционирование, включить/отключить затемнение фона, 
 включить/отключить показ стрелки, включить/отключить закрытие попапа при клике по нему и др.
+
+![Screen1](https://github.com/MXilian/simple_popup_flutter/blob/master/screenshots/2020-10-13_22-35-52.png)
+![Screen2](https://github.com/MXilian/simple_popup_flutter/blob/master/screenshots/2020-10-13_22-36-23.png)
