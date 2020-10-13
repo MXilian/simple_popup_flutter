@@ -2,7 +2,7 @@
 
 In this example, you can drag popup widget to see how the automatic positioning of the popup relative to the screen borders works.
 
-You can customize widget: set a specific positioning, on/off background shading, on/off displaing of an arrow, on/off closing a popup by click, and etc.
+You can customize widget: set a specific positioning, on/off background shading, on/off an arrow display, on/off closing a popup by click, and etc.
 
 ____
 
